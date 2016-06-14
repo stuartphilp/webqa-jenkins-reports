@@ -40,7 +40,7 @@ for job in overview_json["jobs"]:
         print "Claimed By: %s" % claims['claimedBy']
 
         if claims['claimDate']:
-          claim_date = datetime.datetime.fromtimestamp(claims['claimDate']).strftime('%Y-%m-%d %H:%M:%S')
+          claim_date = datetime.datetime.fromtimestamp(float(claims['claimDate']/1000)).strftime('%Y-%m-%d %H:%M:%S')
           print "Claimed On: %s" % claim_date
 
         build_id = build_id - 1
