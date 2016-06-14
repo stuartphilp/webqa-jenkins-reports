@@ -30,12 +30,17 @@ for job in overview_json["jobs"]:
       failing_job_request = requests.get('https://webqa-ci.mozilla.com/job/%s/%s/api/json' % (job['name'], build_id))
       failing_job_json = json.loads(failing_job_request.text)
       claims = failing_job_json['actions'][9]
-      print "==========================="
-      print "Job ID: %s" % build_id
-      print "==========================="
-      print "Reason: %s" % claims['reason']
-      print "Claimed: %s" % claims['claimed']
-      print "Claimed By: %s" % claims['claimedBy']
-      print "Claimed On: %s" % claims['claimDate']
-      build_id = build_id - 1
+      if claims['reason']:
+        print "==========================="
+        print "Job ID: %s" % build_id
+        print "==========================="
+        print "Reason: %s" % claims['reason']
+        print "Claimed: %s" % claims['claimed']
+        print "Claimed By: %s" % claims['claimedBy']
+        print "Claimed On: %s" % claims['claimDate']
+        build_id = build_id - 1
+      else:
+        print "==========================="
+        print "No claims data found in job data"
+        print "==========================="
 
