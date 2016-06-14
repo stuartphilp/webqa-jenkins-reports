@@ -1,5 +1,6 @@
 import simplejson as json
 import requests
+import datetime
 
 overview = requests.get('https://webqa-ci.mozilla.com/api/json')
 
@@ -30,17 +31,21 @@ for job in overview_json["jobs"]:
       failing_job_request = requests.get('https://webqa-ci.mozilla.com/job/%s/%s/api/json' % (job['name'], build_id))
       failing_job_json = json.loads(failing_job_request.text)
       claims = failing_job_json['actions'][9]
-      if claims['reason']:
+      if 'reason' in claims.keys():
         print "==========================="
         print "Job ID: %s" % build_id
         print "==========================="
         print "Reason: %s" % claims['reason']
         print "Claimed: %s" % claims['claimed']
         print "Claimed By: %s" % claims['claimedBy']
-        print "Claimed On: %s" % claims['claimDate']
+
+        if claims['claimDate']:
+          claim_date = datetime.datetime.fromtimestamp(claims['claimDate']).strftime('%Y-%m-%d %H:%M:%S')
+          print "Claimed On: %s" % claim_date
+
         build_id = build_id - 1
       else:
         print "==========================="
-        print "No claims data found in job data"
+        print "No claims data found for job"
         print "==========================="
 
